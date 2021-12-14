@@ -1,4 +1,4 @@
-#Village API
+# Village API
 ### Modelagem conceitual banco de dados:
 ```
 • Villagers
@@ -9,6 +9,8 @@
     • Birth Date, date
     • Rent, decimal, 10,2
     • Password, text, 255
+    • Role, text, 255
+    • Email, text, 255
     
 • Financial Report
     • Id, int, PK
