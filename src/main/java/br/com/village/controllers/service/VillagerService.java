@@ -100,34 +100,14 @@ public class VillagerService implements UserDetailsService {
 		return null;
 	}
 
-	public ArrayList<Map> filterByName(String name) {
-		try {
-			ArrayList<VillagerDTO> villagerList = villagerDao.listAll();
-			ArrayList<Map> villagerMapList = new ArrayList<>();
-			for (VillagerDTO villager : villagerList) {
-				if (!villager.getFirstName().toLowerCase().contains(name.toLowerCase())) {
-					continue;
-				}
-				Map<String, String> villagerMap = new HashMap<>();
-				villagerMap.put("id", String.valueOf(villager.getId()));
-				villagerMap.put("firstName", villager.getFirstName());
-				villagerMap.put("surname", villager.getSurname());
-				villagerMapList.add(villagerMap);
-			}
-			return villagerMapList;
-		} catch (SQLException | ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public ArrayList<Map> filterByMonth(Integer month) {
+	public ArrayList<Map> listByFilter(Map<String, String> filters) {
 		try {
 			ArrayList<VillagerDTO> villagerList = villagerDao.listAll();
 			ArrayList<Map> villagerMapList = new ArrayList<>();
 			for (VillagerDTO villager : villagerList) {
 				int monthValue = villager.getBirthDate().getMonthValue();
-				if (monthValue != month) {
+				if ((filters.containsKey("month") && monthValue != Integer.parseInt(filters.get("month"))) ||
+						(filters.containsKey("name") && !villager.getFirstName().toLowerCase().contains(filters.get("name").toLowerCase()))) {
 					continue;
 				}
 				Map<String, String> villagerMap = new HashMap<>();

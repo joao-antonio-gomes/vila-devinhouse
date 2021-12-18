@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -37,18 +38,17 @@ public class VillagerRest {
         return ResponseEntity.ok(villagers);
     }
 
-    @PostMapping("/listByName/{name}")
-    public ResponseEntity<ArrayList<Map>> listByName(@PathVariable String name) {
-        ArrayList<Map> villagers = villagerService.filterByName(name);
-        if (villagers == null) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/listByFilter")
+    public ResponseEntity<ArrayList<Map>> listByFilter(@RequestParam(value = "month", required = false) Integer month,
+                                                       @RequestParam(value = "name", required = false) String name) {
+        Map<String, String> filters = new HashMap<>();
+        if (month != null) {
+            filters.put("month", month.toString());
         }
-        return ResponseEntity.ok(villagers);
-    }
-
-    @PostMapping("/listByMonth/{month}")
-    public ResponseEntity<ArrayList<Map>> listByMonth(@PathVariable Integer month) {
-        ArrayList<Map> villagers = villagerService.filterByMonth(month);
+        if (name != null) {
+            filters.put("name", name);
+        }
+        ArrayList<Map> villagers = villagerService.listByFilter(filters);
         if (villagers == null) {
             return ResponseEntity.badRequest().build();
         }
