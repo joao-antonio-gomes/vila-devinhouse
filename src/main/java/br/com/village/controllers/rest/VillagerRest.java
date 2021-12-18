@@ -2,15 +2,15 @@ package br.com.village.controllers.rest;
 
 import br.com.village.controllers.service.VillagerService;
 import br.com.village.model.transport.VillagerDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/village")
+@RequestMapping("/villager")
 public class VillagerRest {
 
     private VillagerService villagerService;
@@ -27,5 +27,34 @@ public class VillagerRest {
         }
         return ResponseEntity.ok(newVillager);
     }
+
+    @RequestMapping("/listAll")
+    public ResponseEntity<ArrayList<Map>> listAll() {
+        ArrayList<Map> villagers = villagerService.listAll();
+        if (villagers == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(villagers);
+    }
+
+    @PostMapping("/listByName/{name}")
+    public ResponseEntity<ArrayList<Map>> listByName(@PathVariable String name) {
+        ArrayList<Map> villagers = villagerService.filterByName(name);
+        if (villagers == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(villagers);
+    }
+
+    @PostMapping("/listByMonth/{month}")
+    public ResponseEntity<ArrayList<Map>> listByMonth(@PathVariable Integer month) {
+        ArrayList<Map> villagers = villagerService.filterByMonth(month);
+        if (villagers == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(villagers);
+    }
+
+
 
 }

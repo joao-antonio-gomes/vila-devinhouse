@@ -22,6 +22,12 @@ public class VillagerDTO {
 
     public VillagerDTO() {}
 
+    public VillagerDTO(Integer id, String firstName, String surname) {
+        this.firstName = firstName;
+        this.surname = surname;
+        this.id = id;
+    }
+
     public VillagerDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String villagerDTOPassword, String email, Set<String> role) {
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
         this.firstName = firstName;

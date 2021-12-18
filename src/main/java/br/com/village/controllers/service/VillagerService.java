@@ -13,6 +13,9 @@ import br.com.village.model.dao.VillagerDAO;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class VillagerService implements UserDetailsService {
@@ -77,5 +80,66 @@ public class VillagerService implements UserDetailsService {
 			e.printStackTrace();
 		}
 		return villagerDTO;
+	}
+
+	public ArrayList<Map> listAll() {
+		try {
+			ArrayList<VillagerDTO> villagerList = villagerDao.listAll();
+			ArrayList<Map> villagerMapList = new ArrayList<>();
+			for (VillagerDTO villager : villagerList) {
+				Map<String, String> villagerMap = new HashMap<>();
+				villagerMap.put("id", String.valueOf(villager.getId()));
+				villagerMap.put("firstName", villager.getFirstName());
+				villagerMap.put("surname", villager.getSurname());
+				villagerMapList.add(villagerMap);
+			}
+			return villagerMapList;
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public ArrayList<Map> filterByName(String name) {
+		try {
+			ArrayList<VillagerDTO> villagerList = villagerDao.listAll();
+			ArrayList<Map> villagerMapList = new ArrayList<>();
+			for (VillagerDTO villager : villagerList) {
+				if (!villager.getFirstName().toLowerCase().contains(name.toLowerCase())) {
+					continue;
+				}
+				Map<String, String> villagerMap = new HashMap<>();
+				villagerMap.put("id", String.valueOf(villager.getId()));
+				villagerMap.put("firstName", villager.getFirstName());
+				villagerMap.put("surname", villager.getSurname());
+				villagerMapList.add(villagerMap);
+			}
+			return villagerMapList;
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public ArrayList<Map> filterByMonth(Integer month) {
+		try {
+			ArrayList<VillagerDTO> villagerList = villagerDao.listAll();
+			ArrayList<Map> villagerMapList = new ArrayList<>();
+			for (VillagerDTO villager : villagerList) {
+				int monthValue = villager.getBirthDate().getMonthValue();
+				if (monthValue != month) {
+					continue;
+				}
+				Map<String, String> villagerMap = new HashMap<>();
+				villagerMap.put("id", String.valueOf(villager.getId()));
+				villagerMap.put("firstName", villager.getFirstName());
+				villagerMap.put("surname", villager.getSurname());
+				villagerMapList.add(villagerMap);
+			}
+			return villagerMapList;
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

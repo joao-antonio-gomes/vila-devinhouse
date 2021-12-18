@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.util.Set;
+import java.util.ArrayList;
 
 @Repository
 public class VillagerDAO {
@@ -57,6 +57,32 @@ public class VillagerDAO {
                     return villagerDTO;
                 }
             } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<VillagerDTO> listAll() throws SQLException, ParseException {
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers")) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                ArrayList<VillagerDTO> villagers = new ArrayList<>();
+                while (rs.next()) {
+                    VillagerDTO villagerDTO = new VillagerDTO(
+                            rs.getInt("vlgr_id"),
+                            rs.getString("vlgr_first_name"),
+                            rs.getString("vlgr_surname"),
+                            rs.getString("vlgr_cpf"),
+                            rs.getString("vlgr_password"),
+                            rs.getDouble("vlgr_rent"),
+                            rs.getString("vlgr_birth_date"),
+                            rs.getString("vlgr_email"),
+                            rs.getString("vlgr_role")
+                    );
+                    villagers.add(villagerDTO);
+                }
+                return villagers;
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
