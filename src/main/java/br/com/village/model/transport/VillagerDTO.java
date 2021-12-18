@@ -1,10 +1,10 @@
 package br.com.village.model.transport;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Collection;
-import java.util.Date;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,16 +15,17 @@ public class VillagerDTO {
     private Double rent;
     private Integer id;
     private String password;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String cpf;
     private Set<String> role = new HashSet<>();
     private String email;
 
-    public VillagerDTO(String firstName, String surname, Integer age, String cpf, String password, Double rent, Date birthDate, String email, Set<String> role) {
+    public VillagerDTO() {}
+
+    public VillagerDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String villagerDTOPassword, String email, Set<String> role) {
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
         this.firstName = firstName;
         this.surname = surname;
-        this.age = age;
         this.rent = rent;
         this.password = pe.encode(password);
         this.birthDate = birthDate;
@@ -32,6 +33,20 @@ public class VillagerDTO {
         this.role = role;
         this.email = email;
     }
+
+    public VillagerDTO(Integer id, String firstName, String surname, String cpf, String password, Double rent, String birthDate, String email, String role) throws ParseException {
+        this.id = id;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.rent = rent;
+        this.password = password;
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.birthDate = LocalDate.parse(birthDate, format);
+        this.cpf = cpf;
+        this.role = Set.of(role);
+        this.email = email;
+    }
+
 
     public String getFirstName() {
         return firstName;
@@ -81,11 +96,11 @@ public class VillagerDTO {
         this.password = password;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
