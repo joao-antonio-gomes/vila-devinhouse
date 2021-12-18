@@ -20,3 +20,19 @@
     • Total budget, decimal, 10,2
     • Most expensive villager, int, FK to Villagers Id
 ``` 
+
+### Gerando banco de dados:
+```
+Na pasta raiz do projeto execute as querys do arquivo data.sql
+```
+
+### Autenticando na API:
+```
+Acesse o endereço: http://localhost:8080/login
+Envie um POST, com raw JSON com os dados abaixo para logar como admin:
+
+{
+    "email": "admin@email.com",
+    "password": "admin"
+}
+```
