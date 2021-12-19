@@ -10,42 +10,36 @@ public class Validadores {
             throw new CpfException("CPF inválido");
         }
 
-        int d1 = 0;
-        int d2 = 0;
-        int digito1 = 0;
-        int digito2 = 0;
-        int resto = 0;
-        int digitoCPF = 0;
-        String nDigResult;
-        String nDigVerific;
-
-        d1 = Integer.parseInt(cpf.substring(0, 1));
-        d2 = Integer.parseInt(cpf.substring(1, 2));
-        digito1 = Integer.parseInt(cpf.substring(2, 3));
-        digito2 = Integer.parseInt(cpf.substring(3, 4));
-        resto = (d1 * 100) + (d2 * 10);
-        digitoCPF = 11 - (resto % 11);
-
-        if (digitoCPF > 9) {
-            digitoCPF = 0;
+        int[] cpfArray = new int[11];
+        for (int i = 0; i < cpf.length(); i++) {
+            cpfArray[i] = Integer.parseInt(cpf.substring(i, i + 1));
         }
 
-        if (digitoCPF != digito1) {
+        int soma = 0;
+        for (int i = 0; i < 9; i++) {
+            soma += cpfArray[i] * (10 - i);
+        }
+
+        int digito1 = 11 - (soma % 11);
+        if (digito1 > 9) {
+            digito1 = 0;
+        }
+
+        if (digito1 != cpfArray[9]) {
             throw new CpfException("CPF inválido");
         }
 
-        d1 = Integer.parseInt(cpf.substring(0, 1));
-        d2 = Integer.parseInt(cpf.substring(1, 2));
-        digito1 = Integer.parseInt(cpf.substring(2, 3));
-        digito2 = Integer.parseInt(cpf.substring(3, 4));
-        resto = (d1 * 10) + (d2 * 9);
-        digitoCPF = 11 - (resto % 11);
-
-        if (digitoCPF > 9) {
-            digitoCPF = 0;
+        soma = 0;
+        for (int i = 0; i < 10; i++) {
+            soma += cpfArray[i] * (11 - i);
         }
 
-        if (digitoCPF != digito2) {
+        int digito2 = 11 - (soma % 11);
+        if (digito2 > 9) {
+            digito2 = 0;
+        }
+
+        if (digito2 != cpfArray[10]) {
             throw new CpfException("CPF inválido");
         }
 

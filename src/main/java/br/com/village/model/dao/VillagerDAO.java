@@ -1,5 +1,6 @@
 package br.com.village.model.dao;
 
+import br.com.village.exceptions.VillagerException;
 import br.com.village.model.transport.VillagerDTO;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,35 @@ public class VillagerDAO {
         this.connection = new ConnectionFactoryJDBC().getConnection();
     }
 
-    public VillagerDTO create(VillagerDTO villager) throws SQLException, ParseException {
+    public VillagerDTO getByCpf(String cpf) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers WHERE vlgr_cpf = ?")) {
+            stmt.setString(1, cpf);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    VillagerDTO villagerDTO = new VillagerDTO(
+                            rs.getInt("vlgr_id"),
+                            rs.getString("vlgr_first_name"),
+                            rs.getString("vlgr_surname"),
+                            rs.getString("vlgr_cpf"),
+                            rs.getString("vlgr_password"),
+                            rs.getDouble("vlgr_rent"),
+                            rs.getString("vlgr_birth_date"),
+                            rs.getString("vlgr_email"),
+                            rs.getString("vlgr_role")
+                    );
+                    return villagerDTO;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public VillagerDTO create(VillagerDTO villager) throws SQLException, ParseException, VillagerException {
+        if (getByCpf(villager.getCpf()) != null) {
+            throw new VillagerException("Habitante com CPF já cadastrado!");
+        }
         String sql = "INSERT INTO village_manager.villagers (vlgr_first_name, vlgr_surname, vlgr_cpf, vlgr_password, vlgr_rent, vlgr_birth_date, vlgr_email, vlgr_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, villager.getFirstName());
