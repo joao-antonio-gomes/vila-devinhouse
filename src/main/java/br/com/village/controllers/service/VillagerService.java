@@ -64,7 +64,7 @@ public class VillagerService implements UserDetailsService {
 
 	}
 
-	public VillagerDTO create(VillagerDTO villagerDTO) throws VillagerException {
+	public Map create(VillagerDTO villagerDTO) throws VillagerException {
 		try {
 			VillagerDTO newVillager = new VillagerDTO(
 					villagerDTO.getFirstName(),

@@ -23,7 +23,7 @@ public class VillagerRest {
 
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody VillagerDTO villagerDTO) {
-        VillagerDTO newVillager = null;
+        Map newVillager = null;
         try {
             newVillager = villagerService.create(villagerDTO);
         } catch (VillagerException e) {

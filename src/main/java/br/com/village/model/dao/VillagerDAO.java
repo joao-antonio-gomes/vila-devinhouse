@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class VillagerDAO {
@@ -41,10 +43,11 @@ public class VillagerDAO {
         return null;
     }
 
-    public VillagerDTO create(VillagerDTO villager) throws SQLException, ParseException, VillagerException {
+    public Map create(VillagerDTO villager) throws SQLException, ParseException, VillagerException {
         if (getByCpf(villager.getCpf()) != null) {
             throw new VillagerException("Habitante com CPF já cadastrado!");
         }
+        Map<String, String> villagerMap = new HashMap<>();
         String sql = "INSERT INTO village_manager.villagers (vlgr_first_name, vlgr_surname, vlgr_cpf, vlgr_password, vlgr_rent, vlgr_birth_date, vlgr_email, vlgr_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, villager.getFirstName());
@@ -57,11 +60,18 @@ public class VillagerDAO {
             stmt.setString(8, String.valueOf(villager.getRole()));
             stmt.execute();
             ResultSet rs = stmt.getGeneratedKeys();
+            villagerMap.put("firstName", villager.getFirstName());
+            villagerMap.put("surname", villager.getSurname());
+            villagerMap.put("cpf", villager.getCpf());
+            villagerMap.put("rent", String.valueOf(villager.getRent()));
+            villagerMap.put("birth_date", String.valueOf(villager.getBirthDate()));
+            villagerMap.put("email", villager.getEmail());
             while (rs.next()) {
-                villager.setId(rs.getInt(1));
+                villagerMap.put("id", String.valueOf(rs.getInt("vlgr_id")));
             }
         }
-        return villager;
+
+        return villagerMap;
     }
 
     public void update(VillagerDTO user) {
