@@ -1,5 +1,7 @@
 package br.com.village.model.transport;
 
+import br.com.village.exceptions.CpfException;
+import br.com.village.util.Validadores;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.ParseException;
@@ -11,7 +13,6 @@ import java.util.Set;
 public class VillagerDTO {
     private String firstName;
     private String surname;
-    private Integer age;
     private Double rent;
     private Integer id;
     private String password;
@@ -28,14 +29,14 @@ public class VillagerDTO {
         this.id = id;
     }
 
-    public VillagerDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String villagerDTOPassword, String email, Set<String> role) {
+    public VillagerDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String email, Set<String> role) throws CpfException {
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
         this.firstName = firstName;
         this.surname = surname;
         this.rent = rent;
         this.password = pe.encode(password);
         this.birthDate = birthDate;
-        this.cpf = cpf;
+        this.cpf = Validadores.validaCpf(cpf);
         this.role = role;
         this.email = email;
     }
@@ -71,11 +72,7 @@ public class VillagerDTO {
     }
 
     public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+        return this.birthDate.until(LocalDate.now()).getYears();
     }
 
     public Double getRent() {

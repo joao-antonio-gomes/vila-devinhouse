@@ -1,5 +1,7 @@
 package br.com.village.controllers.service;
 
+import br.com.village.exceptions.CpfException;
+import br.com.village.exceptions.VillagerException;
 import br.com.village.model.transport.VillagerDTO;
 import br.com.village.model.dao.UserSpringSecurity;
 import org.springframework.security.core.Authentication;
@@ -62,7 +64,7 @@ public class VillagerService implements UserDetailsService {
 
 	}
 
-	public VillagerDTO create(VillagerDTO villagerDTO) {
+	public VillagerDTO create(VillagerDTO villagerDTO) throws VillagerException {
 		try {
 			VillagerDTO newVillager = new VillagerDTO(
 					villagerDTO.getFirstName(),
@@ -71,15 +73,13 @@ public class VillagerService implements UserDetailsService {
 					villagerDTO.getPassword(),
 					villagerDTO.getRent(),
 					villagerDTO.getBirthDate(),
-					villagerDTO.getPassword(),
 					villagerDTO.getEmail(),
 					villagerDTO.getRole()
 			);
 			return villagerDao.create(newVillager);
-		} catch (SQLException | ParseException e) {
-			e.printStackTrace();
+		} catch (SQLException | ParseException | CpfException e) {
+			throw new VillagerException(e.getMessage());
 		}
-		return villagerDTO;
 	}
 
 	public ArrayList<Map> listAll() {
@@ -106,8 +106,11 @@ public class VillagerService implements UserDetailsService {
 			ArrayList<Map> villagerMapList = new ArrayList<>();
 			for (VillagerDTO villager : villagerList) {
 				int monthValue = villager.getBirthDate().getMonthValue();
-				if ((filters.containsKey("month") && monthValue != Integer.parseInt(filters.get("month"))) ||
-						(filters.containsKey("name") && !villager.getFirstName().toLowerCase().contains(filters.get("name").toLowerCase()))) {
+				if (
+					(filters.containsKey("month") && monthValue != Integer.parseInt(filters.get("month"))) ||
+					(filters.containsKey("name") && !villager.getFirstName().toLowerCase().contains(filters.get("name").toLowerCase())) ||
+					(filters.containsKey("age") && villager.getAge() < Integer.parseInt(filters.get("age")))
+				) {
 					continue;
 				}
 				Map<String, String> villagerMap = new HashMap<>();

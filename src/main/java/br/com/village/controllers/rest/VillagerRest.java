@@ -1,6 +1,7 @@
 package br.com.village.controllers.rest;
 
 import br.com.village.controllers.service.VillagerService;
+import br.com.village.exceptions.VillagerException;
 import br.com.village.model.transport.VillagerDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,26 +22,20 @@ public class VillagerRest {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<VillagerDTO> create(@RequestBody VillagerDTO villagerDTO) {
-        VillagerDTO newVillager = villagerService.create(villagerDTO);
-        if (newVillager == null) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity create(@RequestBody VillagerDTO villagerDTO) {
+        VillagerDTO newVillager = null;
+        try {
+            newVillager = villagerService.create(villagerDTO);
+        } catch (VillagerException e) {
+            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         }
         return ResponseEntity.ok(newVillager);
     }
 
-    @RequestMapping("/listAll")
-    public ResponseEntity<ArrayList<Map>> listAll() {
-        ArrayList<Map> villagers = villagerService.listAll();
-        if (villagers == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(villagers);
-    }
-
-    @PostMapping("/listByFilter")
-    public ResponseEntity<ArrayList<Map>> listByFilter(@RequestParam(value = "month", required = false) Integer month,
-                                                       @RequestParam(value = "name", required = false) String name) {
+    @GetMapping("/list")
+    public ResponseEntity<ArrayList<Map>> list(@RequestParam(value = "month", required = false) Integer month,
+                                               @RequestParam(value = "name", required = false) String name,
+                                               @RequestParam(value = "age", required = false) Integer age) {
         Map<String, String> filters = new HashMap<>();
         if (month != null) {
             filters.put("month", month.toString());
@@ -48,13 +43,14 @@ public class VillagerRest {
         if (name != null) {
             filters.put("name", name);
         }
+        if (age != null) {
+            filters.put("age", age.toString());
+        }
         ArrayList<Map> villagers = villagerService.listByFilter(filters);
         if (villagers == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(villagers);
     }
-
-
 
 }
