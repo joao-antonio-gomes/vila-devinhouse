@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.com.village.controllers.service.VillagerService;
+import br.com.village.controllers.service.ResidentsService;
 import br.com.village.util.JWTUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,10 +18,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private JWTUtil jwtUtil;
-	private VillagerService userService;
+	private ResidentsService userService;
 
 	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
-			VillagerService userService) {
+			ResidentsService userService) {
 		super(authenticationManager);
 		this.jwtUtil = jwtUtil;
 		this.userService = userService;

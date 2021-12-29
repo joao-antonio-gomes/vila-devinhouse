@@ -1,7 +1,7 @@
 package br.com.village.model.dao;
 
-import br.com.village.exceptions.VillagerException;
-import br.com.village.model.transport.VillagerDTO;
+import br.com.village.exceptions.ResidentsException;
+import br.com.village.model.transport.ResidentsDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,19 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class VillagerDAO {
+public class ResidentsDAO {
     private Connection connection;
 
-    public VillagerDAO() throws SQLException {
+    public ResidentsDAO() throws SQLException {
         this.connection = new ConnectionFactoryJDBC().getConnection();
     }
 
-    public VillagerDTO getByCpf(String cpf) throws SQLException {
+    public ResidentsDTO getByCpf(String cpf) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers WHERE vlgr_cpf = ?")) {
             stmt.setString(1, cpf);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    VillagerDTO villagerDTO = new VillagerDTO(
+                    ResidentsDTO residentsDTO = new ResidentsDTO(
                             rs.getInt("vlgr_id"),
                             rs.getString("vlgr_first_name"),
                             rs.getString("vlgr_surname"),
@@ -34,7 +34,7 @@ public class VillagerDAO {
                             rs.getString("vlgr_email"),
                             rs.getString("vlgr_role")
                     );
-                    return villagerDTO;
+                    return residentsDTO;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -43,9 +43,9 @@ public class VillagerDAO {
         return null;
     }
 
-    public Map create(VillagerDTO villager) throws SQLException, ParseException, VillagerException {
+    public Map create(ResidentsDTO villager) throws SQLException, ParseException, ResidentsException {
         if (getByCpf(villager.getCpf()) != null) {
-            throw new VillagerException("Habitante com CPF já cadastrado!");
+            throw new ResidentsException("Habitante com CPF já cadastrado!");
         }
         Map<String, String> villagerMap = new HashMap<>();
         String sql = "INSERT INTO village_manager.villagers (vlgr_first_name, vlgr_surname, vlgr_cpf, vlgr_password, vlgr_rent, vlgr_birth_date, vlgr_email, vlgr_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -74,15 +74,15 @@ public class VillagerDAO {
         return villagerMap;
     }
 
-    public void update(VillagerDTO user) {
+    public void update(ResidentsDTO user) {
     }
 
-    public VillagerDTO getVillagerByEmail(String email) throws SQLException {
+    public ResidentsDTO getVillagerByEmail(String email) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers WHERE vlgr_email = ?")) {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    VillagerDTO villagerDTO = new VillagerDTO(
+                    ResidentsDTO residentsDTO = new ResidentsDTO(
                             rs.getInt("vlgr_id"),
                             rs.getString("vlgr_first_name"),
                             rs.getString("vlgr_surname"),
@@ -93,7 +93,7 @@ public class VillagerDAO {
                             rs.getString("vlgr_email"),
                             rs.getString("vlgr_role")
                     );
-                    return villagerDTO;
+                    return residentsDTO;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -102,12 +102,12 @@ public class VillagerDAO {
         return null;
     }
 
-    public ArrayList<VillagerDTO> listAll() throws SQLException, ParseException {
+    public ArrayList<ResidentsDTO> listAll() throws SQLException, ParseException {
         try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers")) {
             try (ResultSet rs = stmt.executeQuery()) {
-                ArrayList<VillagerDTO> villagers = new ArrayList<>();
+                ArrayList<ResidentsDTO> villagers = new ArrayList<>();
                 while (rs.next()) {
-                    VillagerDTO villagerDTO = new VillagerDTO(
+                    ResidentsDTO residentsDTO = new ResidentsDTO(
                             rs.getInt("vlgr_id"),
                             rs.getString("vlgr_first_name"),
                             rs.getString("vlgr_surname"),
@@ -118,12 +118,87 @@ public class VillagerDAO {
                             rs.getString("vlgr_email"),
                             rs.getString("vlgr_role")
                     );
-                    villagers.add(villagerDTO);
+                    villagers.add(residentsDTO);
                 }
                 return villagers;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    public ResidentsDTO getById(Integer id) {
+        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM village_manager.villagers WHERE vlgr_id = ?")) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ResidentsDTO residentsDTO = new ResidentsDTO(
+                            rs.getInt("vlgr_id"),
+                            rs.getString("vlgr_first_name"),
+                            rs.getString("vlgr_surname"),
+                            rs.getString("vlgr_cpf"),
+                            rs.getString("vlgr_password"),
+                            rs.getDouble("vlgr_rent"),
+                            rs.getString("vlgr_birth_date"),
+                            rs.getString("vlgr_email"),
+                            rs.getString("vlgr_role")
+                    );
+                    return residentsDTO;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean delete(Integer id) {
+        try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM village_manager.villagers WHERE vlgr_id = ?")) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public double getTotalRent() {
+        try (PreparedStatement stmt = connection.prepareStatement("select sum(vlgr_rent) from village_manager.villagers;")) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("sum");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ResidentsDTO getMoreExpensiveVillager() throws ParseException {
+        String sql = "SELECT * FROM village_manager.villagers WHERE vlgr_rent = (SELECT max(vlgr_rent) FROM village_manager.villagers)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new ResidentsDTO(
+                            rs.getInt("vlgr_id"),
+                            rs.getString("vlgr_first_name"),
+                            rs.getString("vlgr_surname"),
+                            rs.getString("vlgr_cpf"),
+                            rs.getString("vlgr_password"),
+                            rs.getDouble("vlgr_rent"),
+                            rs.getString("vlgr_birth_date"),
+                            rs.getString("vlgr_email"),
+                            rs.getString("vlgr_role")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }

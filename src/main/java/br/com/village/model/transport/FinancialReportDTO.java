@@ -1,19 +1,30 @@
 package br.com.village.model.transport;
 
-import java.util.Date;
+import br.com.village.config.VillageConfig;
 
-public class FinancialReport {
+import java.time.LocalDate;
+
+public class FinancialReportDTO {
     private Integer id;
-    private Date date;
+    private LocalDate date;
     private Double remainingBudget;
-    private Double totalExpenses;
+    private Double expenses;
     private Double totalBudget;
     private Integer mostExpensiveVillagerId;
 
-    public FinancialReport(Date date, Double remainingBudget, Double totalExpenses, Double totalBudget, Integer mostExpensiveVillagerId) {
+    public FinancialReportDTO(Double expenses, Integer mostExpensiveVillagerId) {
+        this.date = LocalDate.now();
+        this.expenses = expenses;
+        this.totalBudget = VillageConfig.getBudget();
+        this.remainingBudget = this.totalBudget - this.expenses;
+        this.mostExpensiveVillagerId = mostExpensiveVillagerId;
+    }
+
+    public FinancialReportDTO(Integer id, LocalDate date, Double remainingBudget, Double expenses, Double totalBudget, Integer mostExpensiveVillagerId) {
+        this.id = id;
         this.date = date;
         this.remainingBudget = remainingBudget;
-        this.totalExpenses = totalExpenses;
+        this.expenses = expenses;
         this.totalBudget = totalBudget;
         this.mostExpensiveVillagerId = mostExpensiveVillagerId;
     }
@@ -26,11 +37,11 @@ public class FinancialReport {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -42,12 +53,12 @@ public class FinancialReport {
         this.remainingBudget = remainingBudget;
     }
 
-    public Double getTotalExpenses() {
-        return totalExpenses;
+    public Double getExpenses() {
+        return expenses;
     }
 
-    public void setTotalExpenses(Double totalExpenses) {
-        this.totalExpenses = totalExpenses;
+    public void setExpenses(Double expenses) {
+        this.expenses = expenses;
     }
 
     public Double getTotalBudget() {

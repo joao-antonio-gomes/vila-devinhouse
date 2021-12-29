@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.village.controllers.service.AuthService;
-import br.com.village.controllers.service.VillagerService;
+import br.com.village.controllers.service.ResidentsService;
 import br.com.village.model.dao.UserSpringSecurity;
 import br.com.village.util.JWTUtil;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class AuthRest {
 
 	@PostMapping("/refresh_token")
 	public ResponseEntity<Void> refreshToken(HttpServletResponse response) throws IOException{
-		UserSpringSecurity userSpringSecurity = VillagerService.authenticated();
+		UserSpringSecurity userSpringSecurity = ResidentsService.authenticated();
 		assert userSpringSecurity != null;
 		JwtDTO generateToken = jwtUtil.generateToken(userSpringSecurity.getUsername());
 		response.addHeader("Authorization", generateToken.getFullToken());

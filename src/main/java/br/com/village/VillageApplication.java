@@ -1,6 +1,5 @@
 package br.com.village;
 
-import br.com.village.controllers.service.VillagerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

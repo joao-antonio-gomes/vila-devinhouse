@@ -2,6 +2,7 @@ package br.com.village.model.transport;
 
 import br.com.village.exceptions.CpfException;
 import br.com.village.util.Validadores;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.ParseException;
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
-public class VillagerDTO {
+public class ResidentsDTO {
     private String firstName;
     private String surname;
     private Double rent;
@@ -21,15 +22,15 @@ public class VillagerDTO {
     private Set<String> role = new HashSet<>();
     private String email;
 
-    public VillagerDTO() {}
+    public ResidentsDTO() {}
 
-    public VillagerDTO(Integer id, String firstName, String surname) {
+    public ResidentsDTO(Integer id, String firstName, String surname) {
         this.firstName = firstName;
         this.surname = surname;
         this.id = id;
     }
 
-    public VillagerDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String email, Set<String> role) throws CpfException {
+    public ResidentsDTO(String firstName, String surname, String cpf, String password, Double rent, LocalDate birthDate, String email, Set<String> role) throws CpfException {
         BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
         this.firstName = firstName;
         this.surname = surname;
@@ -41,7 +42,7 @@ public class VillagerDTO {
         this.email = email;
     }
 
-    public VillagerDTO(Integer id, String firstName, String surname, String cpf, String password, Double rent, String birthDate, String email, String role) throws ParseException {
+    public ResidentsDTO(Integer id, String firstName, String surname, String cpf, String password, Double rent, String birthDate, String email, String role) throws ParseException {
         this.id = id;
         this.firstName = firstName;
         this.surname = surname;

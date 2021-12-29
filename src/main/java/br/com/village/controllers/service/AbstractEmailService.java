@@ -2,7 +2,7 @@ package br.com.village.controllers.service;
 
 import java.util.Date;
 
-import br.com.village.model.transport.VillagerDTO;
+import br.com.village.model.transport.ResidentsDTO;
 import org.springframework.mail.SimpleMailMessage;
 
 public abstract class AbstractEmailService implements EmailService {
@@ -14,12 +14,12 @@ public abstract class AbstractEmailService implements EmailService {
 	}
 
 	@Override
-	public void sendNewPassword(VillagerDTO user, String newPass) {
+	public void sendNewPassword(ResidentsDTO user, String newPass) {
 		SimpleMailMessage sm = prepareNewPasswordEmail(user, newPass);
 		sendEmail(sm);
 	}
 
-	protected SimpleMailMessage prepareNewPasswordEmail(VillagerDTO user, String newPass) {
+	protected SimpleMailMessage prepareNewPasswordEmail(ResidentsDTO user, String newPass) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(user.getEmail());
 		sm.setFrom(sender);

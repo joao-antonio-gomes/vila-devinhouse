@@ -2,7 +2,7 @@ package br.com.village.security;
 
 import java.util.Arrays;
 
-import br.com.village.controllers.service.VillagerService;
+import br.com.village.controllers.service.ResidentsService;
 import br.com.village.util.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] PUBLIC_MATCHERS_POST = { "/login/**" };
 
-	private VillagerService userService;
+	private ResidentsService userService;
 
 	private JWTUtil jwtUtil;
 
-	public WebSecurityConfig(VillagerService userService, JWTUtil jwtUtil) {
+	public WebSecurityConfig(ResidentsService userService, JWTUtil jwtUtil) {
 		this.userService = userService;
 		this.jwtUtil = jwtUtil;
 	}

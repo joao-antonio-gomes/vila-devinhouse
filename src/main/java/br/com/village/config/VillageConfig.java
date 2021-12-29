@@ -7,10 +7,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class VillageConfig {
 
-    @Value("${budget}")
-    private Double budget;
+    private static Double budget;
 
-    public Double getBudget() {
+    public VillageConfig(@Value("${budget}") Double budget) {
+        VillageConfig.budget = budget;
+    }
+
+    public static Double getBudget() {
         return budget;
     }
 }

@@ -2,7 +2,7 @@ package br.com.village.controllers.service;
 
 import java.util.Random;
 
-import br.com.village.model.transport.VillagerDTO;
+import br.com.village.model.transport.ResidentsDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +11,9 @@ public class AuthService {
 
 	private EmailService emailService;
 	private PasswordEncoder passwordEncoder;
-	private VillagerService userService;
+	private ResidentsService userService;
 
-	public AuthService(VillagerService userService,
+	public AuthService(ResidentsService userService,
                        PasswordEncoder passwordEncoder,
                        EmailService emailService) {
 		this.userService = userService;
@@ -22,7 +22,7 @@ public class AuthService {
 	}
 
 	public void sendNewPass(String email)  {
-		VillagerDTO user = userService.getVillagerByEmail(email);
+		ResidentsDTO user = userService.getVillagerByEmail(email);
 		if(user == null) {
 			throw new RuntimeException("Email not found.");
 		}
