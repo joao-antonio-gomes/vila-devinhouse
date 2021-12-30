@@ -1,6 +1,7 @@
 package br.com.village.util;
 
 import br.com.village.exceptions.CpfException;
+import br.com.village.exceptions.ResidentsException;
 
 public class Validadores {
     public static String validaCpf(String cpf) throws CpfException {
@@ -44,5 +45,49 @@ public class Validadores {
         }
 
         return Formatadores.formataCpf(cpf);
+    }
+
+    public static String validaSenha(String senha) throws ResidentsException {
+        if (senha.length() < 8) {
+            throw new ResidentsException("Senha muito curta, deve ter no mínimo 8 caracteres");
+        }
+
+        boolean hasNumbers = false;
+        boolean hasUppercase = false;
+        boolean hasLowercase = false;
+        boolean hasEspecialCharacter = false;
+
+        for (int i = 0; i < senha.length(); i++) {
+            if (Character.isDigit(senha.charAt(i))) {
+                hasNumbers = true;
+            }
+            if (Character.isUpperCase(senha.charAt(i))) {
+                hasUppercase = true;
+            }
+            if (Character.isLowerCase(senha.charAt(i))) {
+                hasLowercase = true;
+            }
+            if (!Character.isLetterOrDigit(senha.charAt(i))) {
+                hasEspecialCharacter = true;
+            }
+        }
+
+        if (!hasNumbers) {
+            throw new ResidentsException("Senha deve conter pelo menos um número");
+        }
+
+        if (!hasUppercase) {
+            throw new ResidentsException("Senha deve conter pelo menos uma letra maiúscula");
+        }
+
+        if (!hasLowercase) {
+            throw new ResidentsException("Senha deve conter pelo menos uma letra minúscula");
+        }
+
+        if (!hasEspecialCharacter) {
+            throw new ResidentsException("Senha deve conter pelo menos um caractere especial");
+        }
+
+        return senha;
     }
 }

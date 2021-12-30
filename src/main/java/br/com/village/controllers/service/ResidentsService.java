@@ -4,6 +4,7 @@ import br.com.village.exceptions.CpfException;
 import br.com.village.exceptions.ResidentsException;
 import br.com.village.model.transport.ResidentsDTO;
 import br.com.village.model.dao.UserSpringSecurity;
+import br.com.village.util.Validadores;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -62,6 +63,7 @@ public class ResidentsService implements UserDetailsService {
 
 	public Map create(ResidentsDTO residentsDTO) throws Exception {
 		try {
+			Validadores.validaSenha(residentsDTO.getPassword());
 			ResidentsDTO newResident = new ResidentsDTO(
 					residentsDTO.getFirstName(),
 					residentsDTO.getSurname(),
