@@ -42,11 +42,8 @@ public class AuthRest {
 	}
 	
 	@PostMapping("/forgot")
-	public ResponseEntity<Void> forgot(@RequestBody MailDTO mail){
-		authService.sendNewPass(mail.getEmail());
-		return ResponseEntity.noContent().build();
+	public ResponseEntity forgot(@RequestBody MailDTO email){
+		authService.sendNewPass(email.getEmail());
+		return ResponseEntity.ok().body("Uma nova senha foi enviada para o email informado.");
 	}
-	
-	
-
 }

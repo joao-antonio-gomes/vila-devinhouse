@@ -32,6 +32,7 @@ public class AuthService {
 		userService.updateUser(user);
 		emailService.sendNewPassword(user, newPass);
 	}
+	
 	private String generatePassword() {
 		return new String(generatePassword(12));
 	}

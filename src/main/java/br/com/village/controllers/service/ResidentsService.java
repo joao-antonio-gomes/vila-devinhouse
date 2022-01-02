@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ResidentsService implements UserDetailsService {
@@ -72,7 +73,7 @@ public class ResidentsService implements UserDetailsService {
 					residentsDTO.getRent(),
 					residentsDTO.getBirthDate(),
 					residentsDTO.getEmail(),
-					residentsDTO.getRole()
+					Set.of("ROLE_ADMIN")
 			);
 			return residentsDao.create(newResident);
 		} catch (ResidentsException | CpfException e) {

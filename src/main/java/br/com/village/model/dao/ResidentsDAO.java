@@ -75,6 +75,20 @@ public class ResidentsDAO {
     }
 
     public void update(ResidentsDTO user) {
+        try (PreparedStatement stmt = connection.prepareStatement("UPDATE village_manager.villagers SET vlgr_first_name = ?, vlgr_surname = ?, vlgr_cpf = ?, vlgr_password = ?, vlgr_rent = ?, vlgr_birth_date = ?, vlgr_email = ?, vlgr_role = ? WHERE vlgr_id = ?")) {
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getSurname());
+            stmt.setString(3, user.getCpf());
+            stmt.setString(4, user.getPassword());
+            stmt.setDouble(5, user.getRent());
+            stmt.setDate(6, Date.valueOf(user.getBirthDate()));
+            stmt.setString(7, user.getEmail());
+            stmt.setString(8, String.valueOf(user.getRole()));
+            stmt.setInt(9, user.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public ResidentsDTO getVillagerByEmail(String email) throws SQLException {
