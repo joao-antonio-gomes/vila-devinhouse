@@ -21,6 +21,10 @@
   - Most expensive villager, int, FK to Villagers Id
 
 
+### Modelagem Lógica
+![Modelagem lógica database](https://i.imgur.com/tNl87NS.png)
+
+
 ### Gerando banco de dados:
 Na pasta raiz do projeto execute as querys do arquivo `data.sql`
 
